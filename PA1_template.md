@@ -35,7 +35,7 @@ hist(totalByDay$steps)
 
 ![](PA1_template_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
 
-- Mean of total steps per day is 9354.2295082.  
+- Mean of total steps per day is 9354.  
 - Median total steps per day is 10395.
 
 
@@ -91,12 +91,12 @@ There are 2304 missing values.
 Missing values have been imputed by using the average number of steps for the same interval across all days.
 
 After imputation:
-- Mean is 1.0766189\times 10^{4}
-- Median is 1.0766189\times 10^{4}
+- Mean is 10766
+- Median is 10766
 
 Occurrences of steps at 5000 have reduced
 
-Both mean and median have reduced
+Both mean and median have increased
 
 ## Are there differences in activity patterns between weekdays and weekends?
 

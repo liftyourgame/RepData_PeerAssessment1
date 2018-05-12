@@ -40,8 +40,8 @@ hist(totalByDay$steps)
 
 ```
 
-- Mean of total steps per day is `r meanSteps`.  
-- Median total steps per day is `r medianSteps`.
+- Mean of total steps per day is `r format(meanSteps, digits=2)`.  
+- Median total steps per day is `r format(medianSteps, digits=2)`.
 
 
 ## What is the average daily activity pattern?
@@ -83,12 +83,12 @@ There are `r missing` missing values.
 Missing values have been imputed by using the average number of steps for the same interval across all days.
 
 After imputation:
-- Mean is `r imputedMean`
-- Median is `r imputedMedian`
+- Mean is `r format(imputedMean,digits=2)`
+- Median is `r format(imputedMedian,digits=2)`
 
 Occurrences of steps at 5000 have reduced
 
-Both mean and median have reduced
+Both mean and median have increased
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
