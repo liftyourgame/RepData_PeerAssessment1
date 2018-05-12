@@ -88,13 +88,15 @@ imputedMedian<-median(totalImputedByDay$steps,na.rm=TRUE)
 
 There are 2304 missing values.
 
-Missing values have been imputed by using the averge number of steps for the same day.
+Missing values have been imputed by using the average number of steps for the same interval across all days.
 
 After imputation:
 - Mean is 1.0766189\times 10^{4}
 - Median is 1.0766189\times 10^{4}
 
-Both mean and median have increased
+Occurrences of steps at 5000 have reduced
+
+Both mean and median have reduced
 
 ## Are there differences in activity patterns between weekdays and weekends?
 

@@ -175,9 +175,10 @@ hist(totalImputedByDay$steps)</code></pre>
 <pre class="r"><code>imputedMean&lt;-mean(totalImputedByDay$steps,na.rm=TRUE)
 imputedMedian&lt;-median(totalImputedByDay$steps,na.rm=TRUE)</code></pre>
 <p>There are 2304 missing values.</p>
-<p>Missing values have been imputed by using the averge number of steps for the same day.</p>
+<p>Missing values have been imputed by using the average number of steps for the same interval across all days.</p>
 <p>After imputation: - Mean is 1.076618910^{4} - Median is 1.076618910^{4}</p>
-<p>Both mean and median have increased</p>
+<p>Occurrences of steps at 5000 have reduced</p>
+<p>Both mean and median have reduced</p>
 </div>
 <div id="are-there-differences-in-activity-patterns-between-weekdays-and-weekends" class="section level2">
 <h2>Are there differences in activity patterns between weekdays and weekends?</h2>
