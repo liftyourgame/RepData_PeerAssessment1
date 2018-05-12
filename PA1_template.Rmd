@@ -18,7 +18,12 @@ library(ggplot2)
 
 ```{r}
 data <- read.table(unz("activity.zip", "activity.csv"), header=T, quote="\"", sep=",")
+
+# Calc avg steps per day
+avgByInterval<-aggregate(list(steps=data$steps), by=list(interval=data$interval),  FUN=mean, na.rm=TRUE, na.action=NULL)
+
 ```
+
 
 
 ## What is mean total number of steps taken per day?
@@ -28,51 +33,62 @@ data <- read.table(unz("activity.zip", "activity.csv"), header=T, quote="\"", se
 
 totalByDay<-aggregate(list(steps=data$steps), by=list(date=data$date),  FUN=sum, na.rm=TRUE, na.action=NULL)
 
-mean(totalByDay$steps,na.rm=TRUE)
-median(totalByDay$steps,na.rm=TRUE)
+meanSteps<-mean(totalByDay$steps,na.rm=TRUE)
+medianSteps<-median(totalByDay$steps,na.rm=TRUE)
+
+hist(totalByDay$steps)
+
 ```
 
+- Mean of total steps per day is `r meanSteps`.  
+- Median total steps per day is `r medianSteps`.
 
 
 ## What is the average daily activity pattern?
 ```{r}
-# Calc avg steps per day
-avgByDayAndInterval<-aggregate(list(steps=data$steps), by=list(date=data$date,interval=data$interval),  FUN=mean, na.rm=TRUE, na.action=NULL)
+max<-avgByInterval[which.max(avgByInterval$steps),]$interval
 
-avgFor5min<-subset(avgByDayAndInterval, avgByDayAndInterval$interval==5)
-
-max<-avgFor5min[which.max(avgFor5min$steps),]$date
-
-plot(steps ~ date, avgFor5min, type="l")
+plot(steps ~ interval, avgByInterval, type="l")
 abline(v=max)
 
 max
 ```
 
-
-
+Max average numbner of steps occurs at interval `r max`  
+This represents peak activity at 8:35am
 
 ## Imputing missing values
 ```{r}
-sum(is.na(data$steps))
+missing<-sum(is.na(data$steps))
 
 uniqueDates<-unique(data$date)
+uniqueIntervals<-unique(data$interval)
 
 dataImputed<-data
 
 # Impute using daily average
-dataImputed$steps[is.na(dataImputed$steps)]<- with(dataImputed, ave(steps, uniqueDates, FUN = function(x) mean(x, na.rm = TRUE)))[is.na(dataImputed$steps)]
+dataImputed$steps[is.na(dataImputed$steps)]<- with(dataImputed, ave(steps, uniqueIntervals, FUN = function(x) mean(x, na.rm = TRUE)))[is.na(dataImputed$steps)]
 
 totalImputedByDay<-aggregate(list(steps=dataImputed$steps), by=list(date=dataImputed$date),  FUN=sum, na.rm=TRUE, na.action=NULL)
 
 hist(totalImputedByDay$steps)
 
-mean(totalImputedByDay$steps,na.rm=TRUE)
-median(totalImputedByDay$steps,na.rm=TRUE)
+imputedMean<-mean(totalImputedByDay$steps,na.rm=TRUE)
+imputedMedian<-median(totalImputedByDay$steps,na.rm=TRUE)
 
 ```
 
-Both mean and median have increased
+There are `r missing` missing values.
+
+Missing values have been imputed by using the average number of steps for the same interval across all days.
+
+After imputation:
+- Mean is `r imputedMean`
+- Median is `r imputedMedian`
+
+Occurrences of steps at 5000 have reduced
+
+Both mean and median have reduced
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
@@ -85,4 +101,9 @@ totalImputedByInterval <- aggregate(list(steps=dataImputed$steps), by=list(inter
 
 qplot(interval, steps, data=totalImputedByInterval, group=1, facets = .~weekpart,geom="line")
 ```
+
+On weekdays and weekends there is a spike in activity in the morning.
+On the weekend there is more activity later in the day
+
+
 

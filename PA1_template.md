@@ -13,7 +13,11 @@ output:
 
 ```r
 data <- read.table(unz("activity.zip", "activity.csv"), header=T, quote="\"", sep=",")
+
+# Calc avg steps per day
+avgByInterval<-aggregate(list(steps=data$steps), by=list(interval=data$interval),  FUN=mean, na.rm=TRUE, na.action=NULL)
 ```
+
 
 
 ## What is mean total number of steps taken per day?
@@ -23,34 +27,24 @@ data <- read.table(unz("activity.zip", "activity.csv"), header=T, quote="\"", se
 ```r
 totalByDay<-aggregate(list(steps=data$steps), by=list(date=data$date),  FUN=sum, na.rm=TRUE, na.action=NULL)
 
-mean(totalByDay$steps,na.rm=TRUE)
+meanSteps<-mean(totalByDay$steps,na.rm=TRUE)
+medianSteps<-median(totalByDay$steps,na.rm=TRUE)
+
+hist(totalByDay$steps)
 ```
 
-```
-## [1] 9354.23
-```
+![](PA1_template_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
 
-```r
-median(totalByDay$steps,na.rm=TRUE)
-```
-
-```
-## [1] 10395
-```
-
+- Mean of total steps per day is 9354.2295082.  
+- Median total steps per day is 10395.
 
 
 ## What is the average daily activity pattern?
 
 ```r
-# Calc avg steps per day
-avgByDayAndInterval<-aggregate(list(steps=data$steps), by=list(date=data$date,interval=data$interval),  FUN=mean, na.rm=TRUE, na.action=NULL)
+max<-avgByInterval[which.max(avgByInterval$steps),]$interval
 
-avgFor5min<-subset(avgByDayAndInterval, avgByDayAndInterval$interval==5)
-
-max<-avgFor5min[which.max(avgFor5min$steps),]$date
-
-plot(steps ~ date, avgFor5min, type="l")
+plot(steps ~ interval, avgByInterval, type="l")
 abline(v=max)
 ```
 
@@ -61,30 +55,24 @@ max
 ```
 
 ```
-## [1] 2012-10-10
-## 61 Levels: 2012-10-01 2012-10-02 2012-10-03 2012-10-04 ... 2012-11-30
+## [1] 835
 ```
 
-
-
+Max average numbner of steps occurs at interval 835  
+This represents peak activity at 8:35am
 
 ## Imputing missing values
 
 ```r
-sum(is.na(data$steps))
-```
+missing<-sum(is.na(data$steps))
 
-```
-## [1] 2304
-```
-
-```r
 uniqueDates<-unique(data$date)
+uniqueIntervals<-unique(data$interval)
 
 dataImputed<-data
 
 # Impute using daily average
-dataImputed$steps[is.na(dataImputed$steps)]<- with(dataImputed, ave(steps, uniqueDates, FUN = function(x) mean(x, na.rm = TRUE)))[is.na(dataImputed$steps)]
+dataImputed$steps[is.na(dataImputed$steps)]<- with(dataImputed, ave(steps, uniqueIntervals, FUN = function(x) mean(x, na.rm = TRUE)))[is.na(dataImputed$steps)]
 
 totalImputedByDay<-aggregate(list(steps=dataImputed$steps), by=list(date=dataImputed$date),  FUN=sum, na.rm=TRUE, na.action=NULL)
 
@@ -94,20 +82,17 @@ hist(totalImputedByDay$steps)
 ![](PA1_template_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
 
 ```r
-mean(totalImputedByDay$steps,na.rm=TRUE)
+imputedMean<-mean(totalImputedByDay$steps,na.rm=TRUE)
+imputedMedian<-median(totalImputedByDay$steps,na.rm=TRUE)
 ```
 
-```
-## [1] 10768.21
-```
+There are 2304 missing values.
 
-```r
-median(totalImputedByDay$steps,na.rm=TRUE)
-```
+Missing values have been imputed by using the averge number of steps for the same day.
 
-```
-## [1] 10765
-```
+After imputation:
+- Mean is 1.0766189\times 10^{4}
+- Median is 1.0766189\times 10^{4}
 
 Both mean and median have increased
 
@@ -125,4 +110,9 @@ qplot(interval, steps, data=totalImputedByInterval, group=1, facets = .~weekpart
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
+
+On weekdays and weekends there is a spike in activity in the morning.
+On the weekend there is more activity later in the day
+
+
 
