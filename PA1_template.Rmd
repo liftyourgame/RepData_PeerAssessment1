@@ -11,6 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 # Load required libraries
 library(dplyr)
 library(ggplot2)
+library(lattice)
 ```
 
 
@@ -99,7 +100,7 @@ dataImputed$weekpart <- as.factor(dataImputed$weekpart)
 
 totalImputedByInterval <- aggregate(list(steps=dataImputed$steps), by=list(interval=dataImputed$interval, weekpart=dataImputed$weekpart),  FUN=mean, na.rm=TRUE, na.action=NULL)
 
-qplot(interval, steps, data=totalImputedByInterval, group=1, facets = .~weekpart,geom="line")
+xyplot(steps ~ interval | weekpart, totalImputedByInterval, type = "l", layout = c(1, 2), xlab = "Interval", ylab = "Number of steps")
 ```
 
 On weekdays and weekends there is a spike in activity in the morning.

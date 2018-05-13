@@ -108,7 +108,8 @@ dataImputed$weekpart <- as.factor(dataImputed$weekpart)
 
 totalImputedByInterval <- aggregate(list(steps=dataImputed$steps), by=list(interval=dataImputed$interval, weekpart=dataImputed$weekpart),  FUN=mean, na.rm=TRUE, na.action=NULL)
 
-qplot(interval, steps, data=totalImputedByInterval, group=1, facets = .~weekpart,geom="line")
+#qplot(interval, steps, data=totalImputedByInterval, group=1, facets = .~weekpart,geom="line")
+xyplot(steps ~ interval | weekpart, totalImputedByInterval, type = "l", layout = c(1, 2), xlab = "Interval", ylab = "Number of steps")
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
